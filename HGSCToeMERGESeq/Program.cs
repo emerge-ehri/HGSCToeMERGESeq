@@ -12,9 +12,7 @@ namespace HGSCToeMERGESeq
             var translator = new HGSCToeMERGESeq(args[1]);
 
             var result = JsonConvert.DeserializeObject<HGSCResult>(File.ReadAllText(args[0]));
-            Console.WriteLine(result.ToString());
-
-            Console.WriteLine(translator.Transform(result));
+            File.WriteAllText(args[0] + ".xml", translator.Transform(result));
         }
     }
 }

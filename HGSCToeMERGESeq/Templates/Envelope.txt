@@ -11,10 +11,7 @@
             <reportIdentifier>{{HGSC.ReportIdentifier}}</reportIdentifier>
             <indicationText>{{HGSC.IndicationForTesting}}</indicationText>
             <genomicSource>
-                <codeSystem>LN</codeSystem>
-                <codeText>Germline</codeText>
-                <code>LA6683-2</code>
-                <valueSetAbbr>Germline</valueSetAbbr>
+                {{Code.HGSC.GenomicSource}}
             </genomicSource>
             <overallInterpretation>
                 {{Code.HGSC.OverallInterpretation}}
@@ -69,38 +66,7 @@
                 </org.pcpgm.gis.fedmsg.v4.Physician>
             </physicians>
             <reportVariants>
-                <org.pcpgm.gis.fedmsg.v4.ReportVariant>
-                    <transcriptId>NM_000059.3</transcriptId>
-                    <dnaChange>g.32929059_32929060del</dnaChange>
-                    <aminoAcidChange>p.L2357fs</aminoAcidChange>
-                    <chromosome>13</chromosome>
-                    <geneSymbol>BRCA2</geneSymbol>
-                    <significant>true</significant>
-                    <interrogatedButNotFound>false</interrogatedButNotFound>
-                    <notInterpreted>false</notInterpreted>
-                    <notes>PMID 9429140, 21324516, 24504028;  </notes>
-                    <alleleState>
-                        <codeSystem>LN</codeSystem>
-                        <codeText>Heterozygous</codeText>
-                        <code>LA6706-1</code>
-                        <valueSetAbbr>Heterozygous</valueSetAbbr>
-                    </alleleState>
-                    <category>
-                        <codeSystem>LN</codeSystem>
-                        <codeText>Pathogenic</codeText>
-                        <code>LA6668-3</code>
-                        <valueSetAbbr>Pathogenic</valueSetAbbr>
-                    </category>
-                    <genomicSource>
-                        <codeSystem>LN</codeSystem>
-                        <codeText>Germline</codeText>
-                        <code>LA6683-2</code>
-                        <valueSetAbbr>Germline</valueSetAbbr>
-                    </genomicSource>
-                    <confirmedStatus>
-                        <confirmedBySanger>false</confirmedBySanger>
-                    </confirmedStatus>
-                </org.pcpgm.gis.fedmsg.v4.ReportVariant>
+                {{Fn.HGSC.ReportVariantXml}}
             </reportVariants>
             <reportAssays>
                 <org.pcpgm.gis.fedmsg.v4.ReportAssay>
@@ -119,47 +85,11 @@
                 </org.pcpgm.gis.fedmsg.v4.Specimen>
             </specimens>
             <interpretedDiseases>
-                {{InterpretedDiseaseXml}}
+                {{Fn.HGSC.InterpretedDiseaseXml}}
             </interpretedDiseases>
         </report>
         <refVariants>
-            <org.pcpgm.gis.fedmsg.v4.ReferenceVariant>
-                <transcriptId>NM_000059.3</transcriptId>
-                <dnaChange>c.7069_7070del</dnaChange>
-                <aminoAcidChange>p.L2357fs</aminoAcidChange>
-                <chromosome>13</chromosome>
-                <reportDnaChange>g.32929059_32929060del</reportDnaChange>
-                <geneIdentifier>
-                    <codeSystem>HGSC</codeSystem>
-                    <codeText>BRCA2</codeText>
-                    <code>BRCA2</code>
-                    <authority>HUGO</authority>
-                    <authorityName>Human Genome Organization</authorityName>
-                </geneIdentifier>
-                <alignments>
-                    <org.pcpgm.gis.fedmsg.v4.ReferenceVariantAlignment>
-                        <genomeBuildName>hg19</genomeBuildName>
-                        <chromosome>13</chromosome>
-                        <startPosition>32929057</startPosition>
-                        <wildtypeSeq>TTC</wildtypeSeq>
-                        <variantSeq>T</variantSeq>
-                    </org.pcpgm.gis.fedmsg.v4.ReferenceVariantAlignment>
-                </alignments>
-                <currentInterpRevision>
-                    <interpretations>
-                        <org.pcpgm.gis.fedmsg.v4.VariantInterp>
-                            <categoryCode>
-<codeSystem>LN</codeSystem>
-<codeText>Pathogenic</codeText>
-<code>LA6668-3</code>
-<valueSetAbbr>Pathogenic</valueSetAbbr>
-                            </categoryCode>
-                            <inheritance>AD</inheritance>
-                            <interpretationText></interpretationText>
-                        </org.pcpgm.gis.fedmsg.v4.VariantInterp>
-                    </interpretations>
-                </currentInterpRevision>
-            </org.pcpgm.gis.fedmsg.v4.ReferenceVariant>
+            {{Fn.HGSC.ReferenceVariantXml}}
         </refVariants>
         <refAssayVersions>
             <org.pcpgm.gis.fedmsg.v4.ReferenceAssayVersion>

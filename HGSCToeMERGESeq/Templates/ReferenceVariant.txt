@@ -1,0 +1,34 @@
+﻿<org.pcpgm.gis.fedmsg.v4.ReferenceVariant>
+    <transcriptId>{{HGSC.Transcript}}</transcriptId>
+    <dnaChange>{{HGSC.cDNA}}</dnaChange>
+    <aminoAcidChange>{{HGSC.ProteinChange}}</aminoAcidChange>
+    <chromosome>{{HGSC.Chromosome}}</chromosome>
+    <reportDnaChange>{{HGSC.Genomic}}</reportDnaChange>
+    <geneIdentifier>
+        <codeSystem>HUGO</codeSystem>
+        <codeText>{{HGSC.Gene}}</codeText>
+        <code>{{HGSC.Gene}}</code>
+        <authority>HUGO</authority>
+        <authorityName>Human Genome Organization</authorityName>
+    </geneIdentifier>
+    <alignments>
+        <org.pcpgm.gis.fedmsg.v4.ReferenceVariantAlignment>
+            <genomeBuildName>hg19</genomeBuildName>
+            <chromosome>{{HGSC.Chromosome}}</chromosome>
+            <startPosition>{{HGSC.Position}}</startPosition>
+            <wildtypeSeq>{{HGSC.Ref}}</wildtypeSeq>
+            <variantSeq>{{HGSC.Alt}}</variantSeq>
+        </org.pcpgm.gis.fedmsg.v4.ReferenceVariantAlignment>
+    </alignments>
+    <currentInterpRevision>
+        <interpretations>
+            <org.pcpgm.gis.fedmsg.v4.VariantInterp>
+                <categoryCode>
+                    {{Code.HGSC.Interpretation}}
+                </categoryCode>
+                <inheritance>{{HGSC.Inheritance}}</inheritance>
+                <interpretationText>{{HGSC.GeneDiseaseText}}</interpretationText>
+            </org.pcpgm.gis.fedmsg.v4.VariantInterp>
+        </interpretations>
+    </currentInterpRevision>
+</org.pcpgm.gis.fedmsg.v4.ReferenceVariant>

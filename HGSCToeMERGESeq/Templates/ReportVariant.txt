@@ -1,0 +1,23 @@
+﻿<org.pcpgm.gis.fedmsg.v4.ReportVariant>
+    <transcriptId>{{HGSC.Transcript}}</transcriptId>
+    <dnaChange>{{HGSC.DnaChange}}</dnaChange>
+    <aminoAcidChange>{{HGSC.ProteinChange}}</aminoAcidChange>
+    <chromosome>{{HGSC.Chromosome}}</chromosome>
+    <geneSymbol>{{HGSC.Gene}}</geneSymbol>
+    <significant>true</significant>
+    <interrogatedButNotFound>false</interrogatedButNotFound>
+    <notInterpreted>false</notInterpreted>
+    <notes>{{HGSC.Notes}}</notes>
+    <alleleState>
+        {{Code.HGSC.Zygosity}}
+    </alleleState>
+    <category>
+        {{Code.HGSC.Interpretation}}
+    </category>
+    <genomicSource>
+        {{Code.HGSC.GenomicSource}}
+    </genomicSource>
+    <confirmedStatus>
+        <confirmedBySanger>{{HGSC.ConfirmedBySanger}}</confirmedBySanger>
+    </confirmedStatus>
+</org.pcpgm.gis.fedmsg.v4.ReportVariant>

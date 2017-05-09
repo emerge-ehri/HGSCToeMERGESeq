@@ -29,7 +29,7 @@ namespace HGSCToeMERGESeq
         public const string FieldStart = "{{";
         public const string FieldEnd = "}}";
 
-        private static Regex OmimRegex = new Regex("(.*)\\s\\[MIM\\s([\\d]+)\\]");
+        private static readonly Regex OmimRegex = new Regex("(.*)\\s\\[MIM\\s([\\d]+)\\]");
 
         public readonly Dictionary<string, Code> Races = new Dictionary<string, Code>()
         {
@@ -52,6 +52,30 @@ namespace HGSCToeMERGESeq
             {
                 "DNA, Isolated",
                 new Code("EMERGE-GIS-LOCAL", "DNA, Isolated", "10037-9", "DNA, Isolated")
+            }
+        };
+
+        public readonly Dictionary<string, Code> Zygosity = new Dictionary<string, Code>()
+        {
+            {
+                "Heterozygous",
+                new Code("LN", "Heterozygous", "LA6706-1", "Heterozygous")
+            }
+        };
+
+        public readonly Dictionary<string, Code> GenomicSources = new Dictionary<string, Code>()
+        {
+            {
+                "Germline",
+                new Code("LN", "Germline", "LA6683-2", "Germline")
+            }
+        };
+
+        public readonly Dictionary<string, Code> VariantInterpretations = new Dictionary<string, Code>()
+        {
+            {
+                "Pathogenic",
+                new Code("LN", "Pathogenic", "LA6668-3", "Pathogenic")
             }
         };
 
@@ -82,6 +106,8 @@ namespace HGSCToeMERGESeq
         public string EnvelopeTemplate { get; set; }
         public string CodeTemplate { get; set; }
         public string ReportDiseaseTemplate { get; set; }
+        public string ReportVariantTemplate { get; set; }
+        public string ReferenceVariantTemplate { get; set; }
         public string TemplatePath { get; set; }
 
         public HGSCToeMERGESeq(string templatePath)
@@ -90,6 +116,8 @@ namespace HGSCToeMERGESeq
             EnvelopeTemplate = File.ReadAllText(Path.Combine(TemplatePath, "Envelope.txt"));
             CodeTemplate = File.ReadAllText(Path.Combine(TemplatePath, "Code.txt"));
             ReportDiseaseTemplate = File.ReadAllText(Path.Combine(TemplatePath, "ReportDisease.txt"));
+            ReportVariantTemplate = File.ReadAllText(Path.Combine(TemplatePath, "ReportVariant.txt"));
+            ReferenceVariantTemplate = File.ReadAllText(Path.Combine(TemplatePath, "ReferenceVariant.txt"));
         }
 
         private string ReplaceHgscCodeFieldId(string key)
@@ -112,9 +140,9 @@ namespace HGSCToeMERGESeq
             return string.Format("{0}{1}{2}", FieldStart, key, FieldEnd);
         }
 
-        private string ReplaceStringWithPropertyValue(string results, PropertyInfo property, HGSCResult result)
+        private string ReplaceStringWithPropertyValue(string results, PropertyInfo property, object result)
         {
-            return results = results.Replace(ReplaceHgscFieldId(property.Name), property.GetValue(result, null).ToString());            
+            return results.Replace(ReplaceHgscFieldId(property.Name), property.GetValue(result, null).ToString());            
         }
 
         private Code DiseaseToDiseaseCode(string disease)
@@ -158,6 +186,10 @@ namespace HGSCToeMERGESeq
                     else if (property.Name == "SpecimenType")
                     {
                         results = ReplaceCodeField(results, property, result, SpecimenTypes);
+                    }
+                    else if (property.Name == "GenomicSource")
+                    {
+                        results = ReplaceCodeField(results, property, result, GenomicSources);
                     }
                     else if (property.Name == "OrderingPhysicianName")
                     {
@@ -206,8 +238,68 @@ namespace HGSCToeMERGESeq
                     }
                 }
             }
+            results = results.Replace(ReplaceHgscFunctionFieldId("InterpretedDiseaseXml"), combinedDiseaseXml);
 
-            results = results.Replace(ReplaceFieldId("InterpretedDiseaseXml"), combinedDiseaseXml);
+            var combinedReportVariantXml = "";
+            if (result.Variants.Count > 0)
+            {
+                foreach (var variant in result.Variants)
+                {
+                    var variantXml = ReportVariantTemplate;
+
+                    PropertyInfo[] variantProperties = typeof(Variant).GetProperties();
+                    foreach (PropertyInfo property in variantProperties)
+                    {
+                        if (property.Name == "Zygosity")
+                        {
+                            variantXml = ReplaceCodeField(variantXml, property, variant, Zygosity);
+                        }
+                        else if (property.Name == "Interpretation")
+                        {
+                            variantXml = ReplaceCodeField(variantXml, property, variant, VariantInterpretations);
+                        }
+                        else if (property.PropertyType == typeof (string) || property.PropertyType == typeof(bool))
+                        {
+                            variantXml = ReplaceStringWithPropertyValue(variantXml, property, variant);   
+                        }
+                    }
+
+                    combinedReportVariantXml += "\r\n" + variantXml;
+                }
+            }
+            results = results.Replace(ReplaceHgscFunctionFieldId("ReportVariantXml"), combinedReportVariantXml);
+
+            var combinedReferenceVariantXml = "";
+            if (result.Variants.Count > 0)
+            {
+                foreach (var variant in result.Variants)
+                {
+                    var variantXml = ReferenceVariantTemplate;
+
+                    PropertyInfo[] variantProperties = typeof(Variant).GetProperties();
+                    foreach (PropertyInfo property in variantProperties)
+                    {
+                        if (property.Name == "Zygosity")
+                        {
+                            variantXml = ReplaceCodeField(variantXml, property, variant, Zygosity);
+                        }
+                        else if (property.Name == "Interpretation")
+                        {
+                            variantXml = ReplaceCodeField(variantXml, property, variant, VariantInterpretations);
+                        }
+                        else if (property.PropertyType == typeof(string) || property.PropertyType == typeof(bool))
+                        {
+                            variantXml = ReplaceStringWithPropertyValue(variantXml, property, variant);
+                        }
+                    }
+
+                    combinedReferenceVariantXml += "\r\n" + variantXml;
+                }
+            }
+            results = results.Replace(ReplaceHgscFunctionFieldId("ReferenceVariantXml"), combinedReferenceVariantXml);
+
+            // Go through genomic source again, which can show up in the variants
+            results = ReplaceCodeField(results, result.GetType().GetProperty("GenomicSource"), result, GenomicSources);
 
             if (results.Contains(FieldStart) || results.Contains(FieldEnd))
             {
@@ -226,7 +318,7 @@ namespace HGSCToeMERGESeq
             return codeXml;
         }
 
-        private string ReplaceCodeField(string results, PropertyInfo property, HGSCResult result, Dictionary<string, Code> codeLookup)
+        private string ReplaceCodeField(string results, PropertyInfo property, object result, Dictionary<string, Code> codeLookup)
         {
             var codeKey = property.GetValue(result, null).ToString();
             if (!codeLookup.ContainsKey(codeKey))
@@ -237,10 +329,6 @@ namespace HGSCToeMERGESeq
             var code = codeLookup[codeKey];
             var codeXml = CodeTemplate;
             codeXml = CodeTemplateReplace(codeXml, code);
-            //codeXml = codeXml.Replace(ReplaceFieldId("CodeSystem"), code.CodeSystem);
-            //codeXml = codeXml.Replace(ReplaceFieldId("CodeText"), code.CodeText);
-            //codeXml = codeXml.Replace(ReplaceFieldId("Code"), code.CodeValue);
-            //codeXml = codeXml.Replace(ReplaceFieldId("ValueSetAbbr"), code.ValueSetAbbr);
             return results.Replace(ReplaceHgscCodeFieldId(property.Name), codeXml);
         }
     }

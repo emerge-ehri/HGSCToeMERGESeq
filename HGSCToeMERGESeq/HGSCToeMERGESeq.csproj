@@ -59,7 +59,9 @@
   <ItemGroup>
     <Content Include="Templates\Code.txt" />
     <Content Include="Templates\Envelope.txt" />
+    <Content Include="Templates\ReferenceVariant.txt" />
     <Content Include="Templates\ReportDisease.txt" />
+    <Content Include="Templates\ReportVariant.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
