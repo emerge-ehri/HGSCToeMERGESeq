@@ -1,0 +1,4 @@
+﻿                    <codeSystem>{{CodeSystem}}</codeSystem>
+                    <codeText>{{CodeText}}</codeText>
+                    <code>{{Code}}</code>
+                    <valueSetAbbr>{{ValueSetAbbr}}</valueSetAbbr>

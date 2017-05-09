@@ -1,0 +1,9 @@
+﻿<org.pcpgm.gis.fedmsg.v4.ReportDisease>
+    <name>{{Name}}</name>
+    <diseaseCode>
+        <codeSystem>{{CodeSystem}}</codeSystem>
+        <codeText>{{CodeText}}</codeText>
+        <code>{{Code}}</code>
+        <valueSetAbbr>{{ValueSetAbbr}}</valueSetAbbr>
+    </diseaseCode>
+</org.pcpgm.gis.fedmsg.v4.ReportDisease>
